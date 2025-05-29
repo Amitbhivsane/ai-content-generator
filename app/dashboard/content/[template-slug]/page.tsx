@@ -408,12 +408,18 @@ function CreateNewContent({ params }: PROPS) {
   };
 
   const SaveInDb = async (formData: any, slug: string, aiResp: string) => {
+    const email = user?.primaryEmailAddress?.emailAddress;
+    if (!email) {
+      console.error("User email is missing.");
+      return;
+    }
+
     try {
       await db.insert(AIOutput).values({
-        fromData: formData,
+        fromData: JSON.stringify(formData), // ensure it's a string
         templateSlug: slug,
         aiResponse: aiResp,
-        createdBy: user?.primaryEmailAddress?.emailAddress,
+        createdBy: email,
         createdAt: moment().format("YYYY-MM-DD"),
       });
     } catch (error) {
