@@ -113,41 +113,37 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { AIOutput, UserSubscription } from "@/utils/schema"; // ✅ Correct DB tables
+import { AIOutput, UserSubscription } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { HistoryItem } from "../history/HistoryTable";
 import { db } from "@/utils/db";
 import { eq } from "drizzle-orm";
 import { TotalUsageContext } from "../(context)/TotalUsageContext";
 import { UserSubscriptionContext } from "../(context)/UserSubContext";
-import { useRouter } from "next/navigation"; // <-- added this import
+import { useRouter } from "next/navigation";
 import { UpdateCreditUsageContext } from "../(context)/UpdateCreditUsageContext";
 
 function UsageTrack() {
-  const router = useRouter(); // <-- initialize router
+  const router = useRouter();
   const { user } = useUser();
   const [totalWords, setTotalWords] = useState(0);
-  const [limit, setLimit] = useState(10000); // default for free users
+  const [limit, setLimit] = useState(10000);
 
   const { usersubscription, setUserSubscription } = useContext(
     UserSubscriptionContext
   );
-  const { updatecreditusage, setUpdateCreditUsage } = useContext(
-    UpdateCreditUsageContext
-  );
+  const { updatecreditusage } = useContext(UpdateCreditUsageContext);
   const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
 
   const percentageUsed = Math.min((totalWords / limit) * 100, 100);
 
-  // Check subscription status
   useEffect(() => {
     if (user?.primaryEmailAddress?.emailAddress) {
       fetchSubscription();
     }
   }, [user]);
 
-  // Refetch words after subscription is confirmed
   useEffect(() => {
     if (user?.primaryEmailAddress?.emailAddress) {
       fetchData();
@@ -156,7 +152,7 @@ function UsageTrack() {
 
   useEffect(() => {
     user && fetchData();
-  }, [updatecreditusage && user]);
+  }, [updatecreditusage, user]);
 
   const fetchSubscription = async () => {
     const email = user?.primaryEmailAddress?.emailAddress;
@@ -164,15 +160,15 @@ function UsageTrack() {
 
     const result = await db
       .select()
-      .from(UserSubscription) // ✅ Use the actual table
+      .from(UserSubscription)
       .where(eq(UserSubscription.email, email));
 
     if (result && result.length > 0 && result[0].active) {
       setUserSubscription(true);
-      setLimit(1000000); // ✅ Paid user limit
+      setLimit(1000000);
     } else {
       setUserSubscription(false);
-      setLimit(10000); // ✅ Free user limit
+      setLimit(10000);
     }
   };
 
@@ -220,12 +216,10 @@ function UsageTrack() {
         </h2>
       </div>
 
-      {/* Show subscription status text */}
       <h2 className="mt-4 text-center text-gray-700">
         Subscription status: {usersubscription ? "Active" : "Inactive"}
       </h2>
 
-      {/* Always show Upgrade button */}
       <Button
         variant="secondary"
         className="w-full my-3 cursor-pointer"

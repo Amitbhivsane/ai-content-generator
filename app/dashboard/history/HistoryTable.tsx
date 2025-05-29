@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 
 export interface HistoryItem {
-  id: Number;
-  formData: string;
+  id: number;
+  fromData: string; // ✅ Correct field name from DB
+  aiResponse: string | null;
   templateSlug: string;
-  aiResponse: string;
-  createdAt: string;
   createdBy: string;
+  createdAt: string | null;
 }
 
 interface HistoryTableProps {
