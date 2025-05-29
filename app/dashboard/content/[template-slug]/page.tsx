@@ -110,7 +110,7 @@
 
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, use } from "react";
 import Templates from "@/app/(data)/Templates";
 import Formsection from "../_components/Formsection";
 import Outputsection from "../_components/Outputsection";
@@ -128,13 +128,14 @@ import { useRouter } from "next/navigation";
 import { UpdateCreditUsageContext } from "../../(context)/UpdateCreditUsageContext";
 
 interface PROPS {
-  params: {
+  params: Promise<{
     "template-slug": string;
-  };
+  }>;
 }
 
 function CreateNewContent(props: PROPS) {
-  const templateSlug = props.params["template-slug"];
+  const params = use(props.params); // 👈 unwraps the Promise
+  const templateSlug = params["template-slug"];
 
   const SelectTemplate: TEMPLATE | undefined = Templates?.find(
     (item) => item.slug === templateSlug
