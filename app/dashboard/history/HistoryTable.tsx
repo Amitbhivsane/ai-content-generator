@@ -4,11 +4,11 @@ import React, { useState } from "react";
 
 export interface HistoryItem {
   id: number;
-  formData: string;
+  fromData: string; // <-- this must match your actual DB
+  aiResponse: string | null;
   templateSlug: string;
-  aiResponse: string;
-  createdAt: string;
   createdBy: string;
+  createdAt: string | null;
 }
 
 interface HistoryTableProps {
