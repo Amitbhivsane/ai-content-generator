@@ -18,7 +18,7 @@ interface Props {
 }
 
 function Outputsection({ aiOutput }: Props) {
-  const editorRef = useRef<ToastEditor | null>(null);
+  const editorRef = useRef<ToastEditor | null>(null); // ✅ Typed and initialized
 
   useEffect(() => {
     if (editorRef.current) {
