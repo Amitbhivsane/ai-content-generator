@@ -5,13 +5,12 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
+import type { Editor as ToastEditor } from "@toast-ui/react-editor";
 
 // Dynamically import the Toast UI Editor with SSR disabled
 const Editor = dynamic(
   () => import("@toast-ui/react-editor").then((mod) => mod.Editor),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 interface Props {
@@ -19,7 +18,7 @@ interface Props {
 }
 
 function Outputsection({ aiOutput }: Props) {
-  const editorRef: any = useRef();
+  const editorRef = useRef<ToastEditor | null>(null);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -47,7 +46,7 @@ function Outputsection({ aiOutput }: Props) {
         height="600px"
         useCommandShortcut={true}
         onChange={() =>
-          console.log(editorRef.current.getInstance().getMarkdown())
+          console.log(editorRef.current?.getInstance().getMarkdown())
         }
       />
     </div>
