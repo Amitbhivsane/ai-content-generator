@@ -3,69 +3,62 @@
 import { FileClock, Home, Settings, WalletCards } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
-import Link from "next/link"; // ✅ Add this
+import React from "react";
+import Link from "next/link";
 import UsageTrack from "./UsageTrack";
 
-function SideNav() {
-  const MenuList = [
-    {
-      name: "Home",
-      icon: Home,
-      path: "/dashboard",
-    },
-    {
-      name: "History",
-      icon: FileClock,
-      path: "/dashboard/history",
-    },
-    {
-      name: "Billing",
-      icon: WalletCards,
-      path: "/dashboard/billing",
-    },
-    {
-      name: "Setting",
-      icon: Settings,
-      path: "/dashboard/setting",
-    },
-  ];
+type SideNavProps = {
+  onItemClick?: () => void; // optional callback to close sidebar on mobile
+};
 
+const MenuList = [
+  { name: "Home", icon: Home, path: "/dashboard" },
+  { name: "History", icon: FileClock, path: "/dashboard/history" },
+  { name: "Billing", icon: WalletCards, path: "/dashboard/billing" },
+  { name: "Setting", icon: Settings, path: "/dashboard/setting" },
+];
+
+export default function SideNav({ onItemClick }: SideNavProps) {
   const path = usePathname();
-  useEffect(() => {
-    console.log(path);
-  }, [path]);
 
   return (
-    <div className="h-screen relative p-3 shadow-sm border bg-white">
-      <div className="flex justify-center">
-        <Image src={"/logo.svg"} alt="logo" width={120} height={50} />
-      </div>
-      <hr className="border" />
+    <div className="h-full bg-white shadow-md w-64 p-4 flex flex-col justify-between">
+      {/* Logo */}
+      <div>
+        <div className="flex justify-center mb-4">
+          <Image src="/logo.svg" alt="logo" width={120} height={50} />
+        </div>
+        <hr className="mb-4" />
 
-      <div className="mt-4">
-        {MenuList.map((menu, index) => {
-          const Icon = menu.icon;
-          return (
-            <Link key={index} href={menu.path}>
-              <div
-                className={`flex gap-2 mb-2 p-3 hover:bg-primary hover:text-white rounded-lg cursor-pointer items-center ${
-                  path === menu.path ? "bg-primary text-white" : ""
+        {/* Menu Items */}
+        <nav>
+          {MenuList.map((menu, index) => {
+            const Icon = menu.icon;
+            const isActive = path === menu.path;
+
+            return (
+              <Link
+                key={index}
+                href={menu.path}
+                onClick={onItemClick}
+                className={`flex items-center gap-3 mb-2 p-3 rounded-lg cursor-pointer transition-colors ${
+                  isActive
+                    ? "bg-primary text-white"
+                    : "hover:bg-gray-100 text-gray-800"
                 }`}
               >
-                <Icon className="h-6 w-6" />
-                <h2 className="text-lg">{menu.name}</h2>
-              </div>
-            </Link>
-          );
-        })}
+                <Icon className="h-5 w-5" />
+                <span className="text-base font-medium">{menu.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
 
-      <div className="absolute bottom-0 left-0 w-fit">
+      {/* Usage Tracker */}
+      <div>
         <UsageTrack />
       </div>
     </div>
   );
 }
-
-export default SideNav;

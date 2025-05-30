@@ -52,45 +52,59 @@ export default function HistoryTable({ history }: HistoryTableProps) {
         </div>
       )}
 
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-300 p-2 text-left">Template</th>
-            <th className="border border-gray-300 p-2 text-left">
-              AI Response
-            </th>
-            <th className="border border-gray-300 p-2 text-left">Date</th>
-            <th className="border border-gray-300 p-2 text-left">Words</th>
-            <th className="border border-gray-300 p-2 text-left">Copy</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((item, index) => (
-            <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
-              <td className="border border-gray-300 p-2">
-                {item.templateSlug || "N/A"}
-              </td>
-              <td className="border border-gray-300 p-2 whitespace-pre-wrap max-w-xl">
-                {item.aiResponse || "No response available"}
-              </td>
-              <td className="border border-gray-300 p-2">
-                {item.createdAt || "Unknown"}
-              </td>
-              <td className="border border-gray-300 p-2">
-                {getWordCount(item.aiResponse || "")}
-              </td>
-              <td className="border border-gray-300 p-2 text-center">
-                <button
-                  onClick={() => handleCopy(item.aiResponse, index)}
-                  className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Copy
-                </button>
-              </td>
+      {/* Responsive wrapper: horizontal scroll on small screens */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 p-2 text-left whitespace-nowrap">
+                Template
+              </th>
+              <th className="border border-gray-300 p-2 text-left whitespace-nowrap">
+                AI Response
+              </th>
+              <th className="border border-gray-300 p-2 text-left whitespace-nowrap">
+                Date
+              </th>
+              <th className="border border-gray-300 p-2 text-left whitespace-nowrap">
+                Words
+              </th>
+              <th className="border border-gray-300 p-2 text-left whitespace-nowrap">
+                Copy
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {history.map((item, index) => (
+              <tr
+                key={item.id}
+                className="bg-white border-b hover:bg-gray-50 align-top"
+              >
+                <td className="border border-gray-300 p-2 whitespace-nowrap">
+                  {item.templateSlug || "N/A"}
+                </td>
+                <td className="border border-gray-300 p-2 whitespace-pre-wrap max-w-xs">
+                  {item.aiResponse || "No response available"}
+                </td>
+                <td className="border border-gray-300 p-2 whitespace-nowrap">
+                  {item.createdAt || "Unknown"}
+                </td>
+                <td className="border border-gray-300 p-2 whitespace-nowrap">
+                  {getWordCount(item.aiResponse || "")}
+                </td>
+                <td className="border border-gray-300 p-2 text-center whitespace-nowrap">
+                  <button
+                    onClick={() => handleCopy(item.aiResponse, index)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Copy
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="text-right font-semibold mt-2">
         Total Words: {totalWords}

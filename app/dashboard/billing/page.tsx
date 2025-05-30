@@ -11,11 +11,12 @@ import { UserSubscriptionContext } from "../(context)/UserSubContext";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
-  const { user, isLoaded, isSignedIn } = useUser(); // ✅ Correctly destructured
+  const { user, isLoaded, isSignedIn } = useUser();
 
   const { usersubscription, setUserSubscription } = useContext(
     UserSubscriptionContext
   );
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -74,11 +75,13 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-16">
-      <h1 className="text-3xl font-bold mb-10">Upgrade With Monthly Plan</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4 md:px-0">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:py-16">
+      <h1 className="text-3xl font-bold mb-8 sm:mb-10 text-center">
+        Upgrade With Monthly Plan
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl w-full">
         {/* Free Plan */}
-        <div className="bg-white p-6 rounded-xl shadow-md w-80 flex flex-col items-center">
+        <div className="bg-white p-6 rounded-xl shadow-md flex flex-col items-center w-full max-w-xs mx-auto">
           <h2 className="text-2xl font-semibold mb-2">Free</h2>
           <p className="text-3xl font-bold">
             0$<span className="text-sm font-medium"> /month</span>
@@ -92,7 +95,7 @@ const Page = () => {
         </div>
 
         {/* Monthly Plan */}
-        <div className="bg-white p-6 rounded-xl shadow-md w-80 flex flex-col items-center border-2 border-blue-500">
+        <div className="bg-white p-6 rounded-xl shadow-md flex flex-col items-center border-2 border-blue-500 w-full max-w-xs mx-auto">
           <h2 className="text-2xl font-semibold mb-2">Monthly</h2>
           <p className="text-3xl font-bold text-blue-600">
             9.99$

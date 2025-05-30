@@ -28,11 +28,11 @@ function Outputsection({ aiOutput }: Props) {
   }, [aiOutput]);
 
   return (
-    <div className="bg-white shadow-lg border rounded-lg">
-      <div className="flex justify-between items-center p-5">
-        <h2 className="font-medium text-lg">Your Result</h2>
+    <div className="bg-white shadow-lg border rounded-lg mx-2 sm:mx-auto max-w-screen-md">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 gap-3">
+        <h2 className="font-medium text-lg sm:text-xl">Your Result</h2>
         <Button
-          className="flex gap-2 cursor-pointer"
+          className="flex gap-2 cursor-pointer whitespace-nowrap"
           onClick={() => navigator.clipboard.writeText(aiOutput)}
         >
           <Copy />
@@ -43,7 +43,7 @@ function Outputsection({ aiOutput }: Props) {
         ref={editorRef}
         initialValue="Your Result will appear here"
         initialEditType="wysiwyg"
-        height="600px"
+        height={window.innerWidth < 640 ? "300px" : "600px"} // dynamic height based on screen width
         useCommandShortcut={true}
         onChange={() =>
           console.log(editorRef.current?.getInstance().getMarkdown())
