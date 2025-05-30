@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 export interface HistoryItem {
   id: number;
-  fromData: string; // <-- this must match your actual DB
+  fromData: string;
   aiResponse: string | null;
   templateSlug: string;
   createdBy: string;
@@ -18,23 +18,29 @@ interface HistoryTableProps {
 export default function HistoryTable({ history }: HistoryTableProps) {
   const [copySuccess, setCopySuccess] = useState<string>("");
 
-  const handleCopy = async (text: string, index: number) => {
+  const handleCopy = async (text: string | null, index: number) => {
+    if (!text) {
+      setCopySuccess("Nothing to copy!");
+      setTimeout(() => setCopySuccess(""), 2000);
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(text);
       setCopySuccess(`Copied output #${index + 1}!`);
       setTimeout(() => setCopySuccess(""), 2000);
     } catch {
       setCopySuccess("Failed to copy!");
+      setTimeout(() => setCopySuccess(""), 2000);
     }
   };
 
-  // Utility to count words
   const getWordCount = (text: string) => {
     return text.trim().split(/\s+/).filter(Boolean).length;
   };
 
   const totalWords = history.reduce(
-    (acc, item) => acc + getWordCount(item.aiResponse),
+    (acc, item) => acc + getWordCount(item.aiResponse || ""),
     0
   );
 
@@ -60,16 +66,18 @@ export default function HistoryTable({ history }: HistoryTableProps) {
         </thead>
         <tbody>
           {history.map((item, index) => (
-            <tr key={index} className="bg-white border-b hover:bg-gray-50">
+            <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
               <td className="border border-gray-300 p-2">
                 {item.templateSlug || "N/A"}
               </td>
               <td className="border border-gray-300 p-2 whitespace-pre-wrap max-w-xl">
-                {item.aiResponse}
+                {item.aiResponse || "No response available"}
               </td>
-              <td className="border border-gray-300 p-2">{item.createdAt}</td>
               <td className="border border-gray-300 p-2">
-                {getWordCount(item.aiResponse)}
+                {item.createdAt || "Unknown"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {getWordCount(item.aiResponse || "")}
               </td>
               <td className="border border-gray-300 p-2 text-center">
                 <button
@@ -85,7 +93,7 @@ export default function HistoryTable({ history }: HistoryTableProps) {
       </table>
 
       <div className="text-right font-semibold mt-2">
-        {/* Total Words: {totalWords} */}
+        Total Words: {totalWords}
       </div>
     </div>
   );
