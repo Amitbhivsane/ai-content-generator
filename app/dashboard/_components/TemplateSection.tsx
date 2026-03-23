@@ -25,7 +25,7 @@ interface TemplateSectionProps {
 
 function TemplateSection({ userSearchInput }: TemplateSectionProps) {
   const [templateList, setTemplateList] = useState(Templates);
-  console.log("=->>>", templateList);
+  // console.log("=->>>", templateList);
 
   useEffect(() => {
     if (userSearchInput) {
